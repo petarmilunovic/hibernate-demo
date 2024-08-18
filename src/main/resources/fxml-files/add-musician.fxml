@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="io.github.petarmilunovic.AppController"
+      stylesheets="/stylesheet.css"
+      spacing="5"
+      alignment="center">
+
+    <children>
+        <Text> test </Text>
+    </children>
+
+</VBox>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="io.github.petarmilunovic.AppController"
+      stylesheets="/stylesheet.css"
+      spacing="5"
+      alignment="center">
+
+    <children>
+        <Button text="Add musician" onAction="#displayAdditionalStage" />
+        <Button text="Update musician" />
+        <Button text="Delete musician" />
+        <Button text="Display all musicians" />
+        <Button text="Display all albums" />
+        <Button text="Search musicians"  />
+        <Button text="Search albums" />
+        <Button text="Exit the program" />
+    </children>
+
+</VBox>

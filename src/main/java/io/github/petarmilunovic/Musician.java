@@ -26,7 +26,7 @@ public class Musician {
     @OneToMany(mappedBy = "musician")
     @Cascade(CascadeType.ALL)
     private Set<Album> albums;
-    
+
     public Musician(int musicianId, String name, String type, int startedPerforming, int stoppedPerforming, String website, Set<Album> albums) {
         this.musicianId = musicianId;
         this.name = name;
