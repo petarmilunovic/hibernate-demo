@@ -3,6 +3,7 @@ package io.github.petarmilunovic;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,10 @@ public class Musician {
     @OneToMany(mappedBy = "musician")
     @Cascade(CascadeType.ALL)
     private Set<Album> albums;
+
+    public Musician() {
+        this.albums = new HashSet<>();
+    }
 
     public Musician(int musicianId, String name, String type, int startedPerforming, int stoppedPerforming, String website, Set<Album> albums) {
         this.musicianId = musicianId;

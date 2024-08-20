@@ -13,12 +13,12 @@
     <children>
         <Button text="Add musician" onAction="#displayAdditionalStage" />
         <Button text="Update musician" />
-        <Button text="Delete musician" />
-        <Button text="Display all musicians" />
+        <Button text="Delete musician" onAction="#displayAdditionalStage" />
+        <Button text="Display all musicians" onAction="#displayAdditionalStage" />
         <Button text="Display all albums" />
         <Button text="Search musicians"  />
         <Button text="Search albums" />
-        <Button text="Exit the program" />
+        <Button text="Exit the program" onAction="#displayAdditionalStage" />
     </children>
 
 </VBox>

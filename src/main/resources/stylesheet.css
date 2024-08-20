@@ -1,3 +1,20 @@
 .button {
     -fx-pref-width: 200px;
 }
+
+.text-field {
+    -fx-max-width: 215px;
+}
+
+.text-field:focused {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+}
+
+#displayMusicianTable {
+    -fx-fixed-cell-size: 25px;
+    -fx-max-height: 70px;
+}
+
+#displayMusiciansButton {
+    -fx-pref-width: 100px;
+}

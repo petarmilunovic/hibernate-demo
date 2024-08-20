@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -11,7 +11,15 @@
       alignment="center">
 
     <children>
-        <Text> test </Text>
+        <TextField fx:id="tfieldMusicianName" promptText="Musician name" />
+        <TextField fx:id="tfieldMusicianType" promptText="Type (solo/band)" />
+        <TextField fx:id="tfieldStartedPerforming" promptText="Started performing" />
+        <TextField fx:id="tfieldStoppedPerforming" promptText="Stopped performing" />
+        <TextField fx:id="tfieldWebsite" promptText="Website" />
+        <TextField fx:id="tfieldAlbumName" promptText="Album name (optional)" />
+        <TextField fx:id="tfieldAlbumRelease" promptText="Release year" disable="true" />
+        <TextField fx:id="tfieldPublishingHouse" promptText="Publishing house (optional)" disable="true" />
+        <Button text="Submit" onAction="#addMusician" />
     </children>
 
 </VBox>
