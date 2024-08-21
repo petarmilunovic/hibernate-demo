@@ -8,7 +8,7 @@ import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
 
-    private static SessionFactory sessionFactory;
+    public static SessionFactory sessionFactory;
     private static ServiceRegistry serviceRegistry;
 
     /**

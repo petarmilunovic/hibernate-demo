@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="io.github.petarmilunovic.AppController"
+      stylesheets="/stylesheet.css"
+      alignment="center"
+      spacing="5">
+
+    <children>
+        <HBox>
+            <Label text="Enter the" style="-fx-padding: 5; -fx-font-size: 16px;" />
+            <TextField fx:id="tfieldAlbumName" promptText="album's name" prefWidth="150" style="-fx-font-size: 16px;" onAction="#searchAlbumsByName" />
+            <Label text="and click enter to see its details ↓" style="-fx-padding: 5; -fx-font-size: 16px;" />
+        </HBox>
+
+        <TableView fx:id="albumTable" prefWidth="540" style="-fx-font-size: 13px;" >
+            <columns>
+                <TableColumn fx:id="albumColumn" text="Album name" prefWidth="135" />
+                <TableColumn fx:id="musicianColumn" text="Musician name" prefWidth="135" />
+                <TableColumn fx:id="releaseYearColumn" text="Release year" prefWidth="135" />
+                <TableColumn fx:id="publishingHouseColumn" text="Publishing house" prefWidth="135" />
+            </columns>
+        </TableView>
+    </children>
+
+</VBox>

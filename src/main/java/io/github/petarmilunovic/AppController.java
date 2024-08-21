@@ -33,8 +33,12 @@ public class AppController {
     @FXML
     private TableView<Musician> musicianTable;
     @FXML
+    private TableView<Album> albumTable;
+    @FXML
     private TableColumn<Musician, String> musicianNameColumn, typeColumn, startedPerformingColumn, stoppedPerformingColumn, websiteColumn,
             albumColumn, releaseYearColumn, publishingHouseColumn;
+    @FXML
+    private TableColumn<Album, String> musicianColumn;
     @FXML
     private Label labelAddInfo;
     @FXML
@@ -108,16 +112,16 @@ public class AppController {
             case "Display all musicians":
                 createAdditionalStage("Display all musicians", "fxml-files/display-musicians.fxml", 290, 275);
                 break;
-            case "Display all albums":
-                createAdditionalStage("Display all albums", "", 0, 0);
-                break;
             case "Search musicians":
-                createAdditionalStage("Search musicians", "", 0, 0);
+                createAdditionalStage("Search musicians", "fxml-files/search-musicians.fxml", 290, 275);
                 break;
             case "Search albums":
-                createAdditionalStage("Search albums", "", 0, 0);
+                createAdditionalStage("Search albums", "fxml-files/search-albums.fxml", 290, 275);
                 break;
             case "Exit the program":
+                if (HibernateUtil.sessionFactory != null)
+                    HibernateUtil.closeSessionFactory();
+
                 Platform.exit();
                 break;
             default:
@@ -317,6 +321,70 @@ public class AppController {
             focusedStage.close();
         }
     }
+    @FXML
+    private void searchMusiciansByName(ActionEvent event) {
+
+        focusedStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // saving stage reference for later use
+
+        Session session;
+        List<Musician> musicians;
+
+        // catching errors related to the database
+        try {
+            session = HibernateUtil.createSessionFactory().openSession();
+            String userInput = tfieldMusicianName.getText();
+            // accepting only characters
+            if (userInput.matches("[a-zA-Z]+")) {
+                musicians = session.createQuery("FROM Musician WHERE name LIKE :name", Musician.class)
+                        .setParameter("name", "%" + userInput + "%")
+                        .list();
+
+                if (!musicians.isEmpty()) {
+                    populateMusicianTable(musicians); // populating table with list of musicians
+
+                } else {
+                    displayDialog("ERROR", "No musicians with the name " + userInput + " found.");
+                }
+            } else {
+                displayDialog("ERROR", "Make sure that the name field is correctly populated.");
+            }
+        } catch (HibernateException err) {
+            displayDialog("ERROR", "There was a communication error with the database. Try again later.");
+            focusedStage.close(); // closing the window
+        }
+    }
+    @FXML
+    private void searchAlbumsByName(ActionEvent event) {
+
+        focusedStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // saving stage reference for later use
+
+        Session session;
+        List<Album> albums;
+
+        // catching errors related to the database
+        try {
+            session = HibernateUtil.createSessionFactory().openSession();
+            String userInput = tfieldAlbumName.getText();
+            // accepting only characters
+            if (userInput.matches("[a-zA-Z]+")) {
+                albums = session.createQuery("FROM Album WHERE albumName LIKE :albumName", Album.class)
+                        .setParameter("albumName", "%" + userInput + "%")
+                        .list();
+
+                if (!albums.isEmpty()) {
+                    populateAlbumTable(albums); // populating table with list of albums
+
+                } else {
+                    displayDialog("ERROR", "No albums with the name " + userInput + " found.");
+                }
+            } else {
+                displayDialog("ERROR", "Make sure that the name field is correctly populated.");
+            }
+        } catch (HibernateException err) {
+            displayDialog("ERROR", "There was a communication error with the database. Try again later.");
+            focusedStage.close(); // closing the window
+        }
+    }
 
     /**
      * methods for populating data with musician/album data
@@ -366,6 +434,33 @@ public class AppController {
 
         ObservableList<Musician> musicianDetails = FXCollections.observableArrayList(musicianList);
         musicianTable.setItems(musicianDetails);
+    }
+    private void populateAlbumTable(Object albums) {
+
+        List<Album> albumList = null;
+
+        // populates the list in a specific way depending on the method input parameter (one or multiple objects)
+        if (albums instanceof Album)
+            albumList = Collections.singletonList((Album) albums);
+        else if (albums instanceof List)
+            albumList = (List<Album>) albums;
+
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("albumName"));
+
+        musicianColumn.setCellValueFactory(cellData -> {
+            Album album = cellData.getValue();
+            if (album != null) {
+                Musician musician = album.getMusician();
+                return new SimpleStringProperty(musician != null ? musician.getName() : "");
+            }
+            return new SimpleStringProperty("");
+        });
+
+        releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
+        publishingHouseColumn.setCellValueFactory(new PropertyValueFactory<>("publishingHouse"));
+
+        ObservableList<Album> albumDetails = FXCollections.observableArrayList(albumList);
+        albumTable.setItems(albumDetails);
     }
 
     /**

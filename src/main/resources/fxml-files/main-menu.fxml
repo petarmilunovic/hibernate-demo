@@ -15,9 +15,8 @@
         <Button text="Update musician" />
         <Button text="Delete musician" onAction="#displayAdditionalStage" />
         <Button text="Display all musicians" onAction="#displayAdditionalStage" />
-        <Button text="Display all albums" />
-        <Button text="Search musicians"  />
-        <Button text="Search albums" />
+        <Button text="Search musicians" onAction="#displayAdditionalStage" />
+        <Button text="Search albums" onAction="#displayAdditionalStage" />
         <Button text="Exit the program" onAction="#displayAdditionalStage" />
     </children>
 
