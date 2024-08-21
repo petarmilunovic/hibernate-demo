@@ -12,7 +12,7 @@
 
     <children>
         <Button text="Add musician" onAction="#displayAdditionalStage" />
-        <Button text="Update musician" />
+        <Button text="Update musician" onAction="#displayAdditionalStage" />
         <Button text="Delete musician" onAction="#displayAdditionalStage" />
         <Button text="Display all musicians" onAction="#displayAdditionalStage" />
         <Button text="Search musicians" onAction="#displayAdditionalStage" />

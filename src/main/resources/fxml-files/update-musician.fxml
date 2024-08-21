@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="io.github.petarmilunovic.AppController"
+      stylesheets="/stylesheet.css"
+      alignment="center"
+      spacing="5">
+
+    <children>
+        <HBox>
+            <Label text="Enter the" style="-fx-padding: 5; -fx-font-size: 16px;" />
+            <TextField fx:id="tfieldMusicianId" promptText="musician's ID" prefWidth="150" style="-fx-font-size: 16px;" onAction="#searchMusiciansById" />
+            <Label text="and click enter to see their details ↓" style="-fx-padding: 5; -fx-font-size: 16px;" />
+        </HBox>
+
+        <TableView id="displayMusicianTable" fx:id="musicianTable" prefWidth="1050" style="-fx-font-size: 13px;">
+            <columns >
+                <TableColumn fx:id="musicianNameColumn" text="Name" prefWidth="125" />
+                <TableColumn fx:id="typeColumn" text="Type" prefWidth="75" />
+                <TableColumn fx:id="startedPerformingColumn" text="Started performing" prefWidth="135" />
+                <TableColumn fx:id="stoppedPerformingColumn" text="Stopped performing" prefWidth="135" />
+                <TableColumn fx:id="websiteColumn" text="Website" prefWidth="219" />
+                <TableColumn fx:id="albumColumn" text="Album name" prefWidth="125" />
+                <TableColumn fx:id="releaseYearColumn" text="Release Year" prefWidth="110" />
+                <TableColumn fx:id="publishingHouseColumn" text="Publishing House" prefWidth="125" />
+            </columns>
+        </TableView>
+
+        <HBox>
+            <Label fx:id="labelAddInfo" text="Select what do you like to update: " style="-fx-padding: 5; -fx-font-size: 16px;" visible="false" />
+            <ListView fx:id="columnList" prefWidth="200" prefHeight="128" style="-fx-font-size: 16px" visible="false" />
+            <Label fx:id="labelAdditInfo" text="Enter new value: " style="-fx-padding: 5; -fx-font-size: 16px;" visible="false" />
+
+            <VBox spacing="10">
+                <TextField fx:id="tfieldUpdateColumn" prefWidth="150" style="-fx-font-size: 16px;" visible="false"/>
+                <Button fx:id="submitButton" text="Submit" onAction="#updateMusician" visible="false" />
+            </VBox>
+
+        </HBox>
+    </children>
+
+</VBox>

@@ -26,7 +26,7 @@ import java.util.List;
 public class AppController {
 
     @FXML
-    private TextField tfieldMusicianId, tfieldMusicianName, tfieldMusicianType, tfieldStartedPerforming, tfieldStoppedPerforming, tfieldWebsite,
+    private TextField tfieldMusicianId, tfieldMusicianName, tfieldMusicianType, tfieldStartedPerforming, tfieldStoppedPerforming, tfieldWebsite, tfieldUpdateColumn,
             tfieldAlbumName, tfieldAlbumRelease, tfieldPublishingHouse;
     @FXML
     private Stage focusedStage;
@@ -40,9 +40,11 @@ public class AppController {
     @FXML
     private TableColumn<Album, String> musicianColumn;
     @FXML
-    private Label labelAddInfo;
+    private Label labelAddInfo, labelAdditInfo;
     @FXML
-    private Button deleteButtonYes, deleteButtonNo;
+    private Button deleteButtonYes, deleteButtonNo, submitButton;
+    @FXML
+    private ListView<String> columnList;
 
     @FXML
     private void initialize() {
@@ -104,7 +106,7 @@ public class AppController {
                 createAdditionalStage("Add musician", "fxml-files/add-musician.fxml", 300, 315);
                 break;
             case "Update musician":
-                createAdditionalStage("Update musician", "", 0, 0);
+                createAdditionalStage("Update musician", "fxml-files/update-musician.fxml", 290, 290);
                 break;
             case "Delete musician":
                 createAdditionalStage("Delete musician", "fxml-files/delete-musicians.fxml", 1000, 275);
@@ -193,6 +195,95 @@ public class AppController {
                 session.close();
                 HibernateUtil.closeSessionFactory();
             }
+        }
+    }
+    @FXML
+    private void updateMusician(ActionEvent event) {
+        focusedStage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // saving stage reference for later use
+
+        String selectedColumn = columnList.getSelectionModel().getSelectedItem();
+        Session session = null;
+        Transaction tx = null;
+        Musician musician;
+        Album album = null;
+
+        if (selectedColumn != null) {
+            try {
+                session = HibernateUtil.createSessionFactory().openSession();
+                tx = session.beginTransaction();
+
+                String selectedId = tfieldMusicianId.getText();
+                // accepting only digits
+                if (selectedId.matches("\\d+")) {
+                    int id = Integer.parseInt(selectedId);
+                    musician = session.get(Musician.class, id);
+
+                    if (musician != null) {
+                        String newValue = tfieldUpdateColumn.getText();
+
+                        // check if  musician has any albums, if not creating a new album
+                        if (musician.getAlbums() == null || musician.getAlbums().isEmpty()) {
+                            album = new Album();
+                            album.setMusician(musician);
+                            musician.getAlbums().add(album);
+                        } else {
+                            album = musician.getAlbums().iterator().next();
+                        }
+
+                        switch (selectedColumn) {
+                            case "Name":
+                                musician.setName(newValue);
+                                break;
+                            case "Type":
+                                musician.setType(newValue);
+                                break;
+                            case "Started performing":
+                                musician.setStartedPerforming(Integer.parseInt(newValue));
+                                break;
+                            case "Stopped performing":
+                                musician.setStoppedPerforming(Integer.parseInt(newValue));
+                                break;
+                            case "Website":
+                                musician.setWebsite(newValue);
+                                break;
+                            case "Album name":
+                                album.setAlbumName(newValue);
+                                break;
+                            case "Release year":
+                                album.setReleaseYear(Integer.parseInt(newValue));
+                                break;
+                            case "Publishing house":
+                                album.setPublishingHouse(newValue);
+                                break;
+                            default:
+                                displayDialog("ERROR", "Unknown column selected.");
+                                return;
+                        }
+
+                        session.update(musician);
+                        tx.commit();
+
+                        displayDialog("INFORMATION", "Musician updated successfully.");
+                        focusedStage.close(); // closing the window
+                    } else {
+                        displayDialog("ERROR", "Musician with ID " + selectedId + " not found.");
+                    }
+                } else {
+                    displayDialog("ERROR", "Invalid ID format.");
+                }
+            } catch (NumberFormatException err) {
+                displayDialog("ERROR", "Make sure that all fields are correctly populated. Invalid input: " + err.getMessage());
+            } catch (HibernateException err) {
+                if (tx != null) tx.rollback();
+                displayDialog("ERROR", "Database error. Please try again later.");
+                focusedStage.close(); // closing the window
+            } finally {
+                if (session != null && session.isOpen()) {
+                    session.close();
+                }
+            }
+        } else {
+            displayDialog("ERROR", "No column selected.");
         }
     }
     @FXML
@@ -298,8 +389,35 @@ public class AppController {
                 int id = Integer.parseInt(tfieldMusicianId.getText());
                 musician = session.get(Musician.class, id);
 
-                // this only applies to resources/delete-musicians.fxml file
-                 if (focusedStage.getTitle().matches("Delete musician")) {
+                // this only applies to resources/update-musician.fxml file
+                if (focusedStage.getTitle().matches("Update musician")) {
+                    if (musician != null) {
+
+                        populateMusicianTable(musician); // populating table with musician data
+
+                        labelAddInfo.setVisible(true);
+                        labelAdditInfo.setVisible(true);
+                        tfieldUpdateColumn.setVisible(true);
+                        submitButton.setVisible(true);
+
+                        ObservableList<String> items = FXCollections.observableArrayList(
+                                "Name",
+                                "Type",
+                                "Started performing",
+                                "Stopped performing",
+                                "Website",
+                                "Album name",
+                                "Release year",
+                                "Publishing house"
+                        );
+
+                        columnList.setItems(items);
+                        columnList.setVisible(true);
+                    } else {
+                        displayDialog("ERROR", "Musician with ID " + selectedId + " not found!");
+                    }
+                    // this only applies to resources/delete-musicians.fxml file
+                } else if (focusedStage.getTitle().matches("Delete musician")) {
                     if (musician != null) {
 
                         populateMusicianTable(musician); // populating table with musician data
@@ -310,8 +428,6 @@ public class AppController {
                     } else {
                         displayDialog("ERROR", "Musician with ID " + selectedId + " not found!");
                     }
-                } else {
-                    displayDialog("ERROR", "Musician with ID " + selectedId + " not found!");
                 }
             } else {
                 displayDialog("ERROR", "Make sure that ID field is correctly populated. ");
@@ -410,7 +526,7 @@ public class AppController {
                 Album album = cellData.getValue().getAlbums().iterator().next();
                 return new SimpleStringProperty(album.getAlbumName());
             } else {
-                return new SimpleStringProperty("No album");
+                return new SimpleStringProperty("");
             }
         });
 
