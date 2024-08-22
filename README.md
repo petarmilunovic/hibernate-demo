@@ -19,7 +19,7 @@ Before running the application, ensure you have the following:
    
    ```bash
    git clone https://github.com/petarmilunovic/hibernate-demo.git
-   cd jdbc-demo
+   cd hibernate-demo
 
 2. Add dependencies:
 - The repository already contains a pom.xml file with all necessary dependencies, including Hibernate and JavaFX
